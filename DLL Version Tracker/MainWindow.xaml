@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DLL_Version_Tracker"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1024" WindowStyle="None" ResizeMode="NoResize" Background="Transparent">
+        Title="MainWindow" Height="768" Width="1024" MinHeight="500" MinWidth="800" WindowStyle="None" ResizeMode="CanResize" Background="Transparent" MouseDown="Window_MouseDown">
     <Window.Resources>
         <Style x:Key="menuButtonTemplate" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle">
@@ -79,7 +79,7 @@
                     </Grid.RowDefinitions>
                     <Rectangle Grid.Row="0" Height="40" Width="40" RadiusX="10" RadiusY="10" VerticalAlignment="Center">
                         <Rectangle.Fill>
-                            <ImageBrush ImageSource="/Assets/applogoexample.png" Stretch="Uniform"/>
+                            <ImageBrush ImageSource="/Assets/icon-fav.ico" Stretch="Uniform"/>
                         </Rectangle.Fill>
                     </Rectangle>
 
@@ -97,18 +97,15 @@
                         <!--Adding Menu buttons-->
                         <Button Grid.Row="0" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}">
                             <Button.Content>
-                                <Image Source="/Assets/folder.png" Stretch="Uniform" Width="20" AutomationProperties.Name="dllCheckerButton"/>
-                            </Button.Content>
-                        </Button>
-                        
-                        <Button Grid.Row="5" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}">
-                            <Button.Content>
-                                <Image Source="/Assets/sms.png" Stretch="Uniform" Width="20"/>
+                                <Image Source="/Assets/searchwhite.png" Stretch="Uniform" Width="20" AutomationProperties.Name="dllCheckerButton"/>
                             </Button.Content>
                         </Button>
                     </Grid>
                     <!--#endregion-->
                 </Grid>
+                <DockPanel>
+                    <Frame x:Name="_mainFrame" />
+                </DockPanel>
                 <Border  Grid.Column="1" Background="Transparent">
                     <Border Background="White" CornerRadius="20" BorderThickness="0">
                         <Grid>
@@ -124,7 +121,7 @@
                                 <RowDefinition Height="30" />
                                 <RowDefinition Height="30" />
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="60" />
+                                <RowDefinition Height="100" />
                             </Grid.RowDefinitions>
                             
                             <!-- ROW 1 -->
@@ -138,12 +135,24 @@
                             <TextBlock Text="Enter the full path of the RELEASE build folder of the .NET Application:" Grid.Column="1" Grid.Row="2"/>
                             <!-- ROW 3 -->
                             <TextBox Grid.Row="3" Grid.Column="1" x:Name="filePathTextBox"/>
-                            <Button Grid.Column="2" Grid.Row="3" Content="Check DLL's" x:Name="checkButton" Cursor="Hand" Click="checkButton_Click" />
-                            
+                            <Button Grid.Column="2" Grid.Row="3" Content="Check DLL's" x:Name="checkButton" Cursor="Hand" Click="checkButton_Click" BorderThickness="2" >
+                                <Button.Effect>
+                                    <DropShadowEffect Opacity="0.11" ShadowDepth="2"/>
+                                </Button.Effect>
+                            </Button>
+
                             <!-- ROW 4 -->
                             <ListView Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="0 30" x:Name="outputListView">
                             </ListView>
 
+                            <!-- ROW 6-->
+                            <TextBlock Text="Developed by " Grid.Row="6" Grid.Column="1" TextAlignment="Center" Grid.ColumnSpan="2"/>
+                            <Image Grid.Column="1" Grid.Row="6" Source="/Assets/logo.png" Width="100" Height="50" Grid.ColumnSpan="2"/>
+                            <TextBlock Grid.Column="1" Grid.Row="6" TextAlignment="Center" Padding="145 80 0 0">
+                                <Hyperlink RequestNavigate="Hyperlink_RequestNavigate"  NavigateUri="http://hugo.dorfling.org" >
+                                http://hugo.dorfling.org
+                            </Hyperlink>
+                            </TextBlock>
                         </Grid>
                     </Border>
                 </Border>
