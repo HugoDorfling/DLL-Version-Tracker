@@ -39,10 +39,44 @@ namespace DLL_Version_Tracker
 
         public void loadDllFiles()
         {
-            List<string> thirdPartyPackages = new List<string>() { "System" };
+            
             filePath = filePathTextBox.Text;
             List<string> dllFiles = Directory.GetFiles(filePath, "*.dll", SearchOption.AllDirectories).ToList();
             List<string> exeFiles = Directory.GetFiles(filePath, "*.exe", SearchOption.AllDirectories).ToList();
+            List<string> thirdPartyPackages = new List<string>() { "System" };
+
+            thirdPartyPackages = getThirdPartyNames();
+
+            foreach (string file in dllFiles)
+                {
+                    var info = new FileInfo(file);
+                    string fileName = info.Name;
+
+                    bool isThirdParty = checkIsThirdPartyLibrary(fileName, thirdPartyPackages);
+                    
+                    if (!isThirdParty)
+                    {
+                        var assemblyVersion = AssemblyName.GetAssemblyName(info.FullName).Version;
+                        string fileNameAndAssembly = fileName + "  -  DLL Version: " + assemblyVersion.ToString();
+
+                        outputListView.Items.Add(fileNameAndAssembly);
+                    }
+                }
+                foreach (string file in exeFiles)
+                {
+                    var info = new FileInfo(file);
+                    string fileName = info.Name;
+                    var assemblyVersion = AssemblyName.GetAssemblyName(info.FullName).Version;
+                    string fileNameAndAssembly = fileName + "  -  EXE Version: " + assemblyVersion.ToString();
+
+                    outputListView.Items.Add(fileNameAndAssembly);
+                }
+
+        }
+
+        private List<string> getThirdPartyNames()
+        {
+            List<string> thirdPartyPackages = new List<string>() { "System" };
             try
             {
                 DirectoryInfo parentDir0 = Directory.GetParent(filePath);
@@ -64,54 +98,38 @@ namespace DLL_Version_Tracker
                         }
                     }
                 }
-
-                foreach (string file in dllFiles)
-                {
-                    var info = new FileInfo(file);
-                    string fileName = info.Name;
-                    string thirdParty = "";
-                    bool isThirdParty = false;
-                    
-                    for (int i = 0; i < thirdPartyPackages.Count; i++)
-                    {
-                        if (thirdPartyPackages[i].Contains('.'))
-                        {
-                            thirdParty = thirdPartyPackages[i].Substring(0, thirdPartyPackages[i].IndexOf('.'));
-                        }
-                        else
-                        {
-                            thirdParty = thirdPartyPackages[i].Substring(0, thirdPartyPackages[i].Length);
-                        }
-                        string pattern = $@"\b{thirdParty}\w*\b";
-                        Match m = Regex.Match(fileName, pattern, RegexOptions.IgnoreCase);
-                        if (m.Success)
-                        {
-                            isThirdParty = true;
-                            MessageBox.Show("Third Party Library found and excluding from list: " + fileName);
-                        }
-                    }
-                    if (!isThirdParty)
-                    {
-                        var assemblyVersion = AssemblyName.GetAssemblyName(info.FullName).Version;
-                        string fileNameAndAssembly = fileName + "  -  DLL Version: " + assemblyVersion.ToString();
-
-                        outputListView.Items.Add(fileNameAndAssembly);
-                    }
-                }
-                foreach (string file in exeFiles)
-                {
-                    var info = new FileInfo(file);
-                    string fileName = info.Name;
-                    var assemblyVersion = AssemblyName.GetAssemblyName(info.FullName).Version;
-                    string fileNameAndAssembly = fileName + "  -  EXE Version: " + assemblyVersion.ToString();
-
-                    outputListView.Items.Add(fileNameAndAssembly);
-                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show("Error!" + e.Message.ToString());
             }
+            return thirdPartyPackages;
+        }
+
+        private bool checkIsThirdPartyLibrary(string filename, List<string> thirdPartyList)
+        {
+            string thirdParty = "";
+            bool isThirdParty = false;
+
+            for (int i = 0; i < thirdPartyList.Count; i++)
+            {
+                if (thirdPartyList[i].Contains('.'))
+                {
+                    thirdParty = thirdPartyList[i].Substring(0, thirdPartyList[i].IndexOf('.'));
+                }
+                else
+                {
+                    thirdParty = thirdPartyList[i].Substring(0, thirdPartyList[i].Length);
+                }
+                string pattern = $@"\b{thirdParty}\w*\b";
+                Match m = Regex.Match(filename, pattern, RegexOptions.IgnoreCase);
+                if (m.Success)
+                {
+                    isThirdParty = true;
+                    MessageBox.Show("Third Party Library found and excluding from list: " + filename);
+                }
+            }
+            return isThirdParty;
         }
 
         private void closeButton_Click(object sender, RoutedEventArgs e)
