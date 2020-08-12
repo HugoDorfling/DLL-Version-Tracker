@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DLL Version Tracker")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("WPF Application to check a specified directory for libraries, track their DLL versions and use the average values in the version sequence to determine which libraries are not up to date.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("hugo.dorfling.org")]
 [assembly: AssemblyProduct("DLL Version Tracker")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Copyright - Hugo Dorfling ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
